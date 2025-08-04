@@ -5,6 +5,7 @@ export 'src/widgets/particle_effects_widget.dart';
 // Export models
 export 'src/models/particle_config.dart';
 export 'src/models/particle_type.dart';
+export 'src/models/particle_covrage.dart';
 export 'src/models/direction.dart';
 export 'src/models/particle_data.dart';
 

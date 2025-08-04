@@ -97,13 +97,13 @@ class ParticlePainter extends CustomPainter {
 
     // Calculate particle-specific progress with offset for staggered animation
     final particleProgress = (timeProgress + particle.animationOffset) % 1.0;
-    final adjustedProgress = particleProgress * particle.velocity * config.velocityMultiplier;
+    final adjustedProgress = particleProgress * particle.velocity * particle.screenOccupancy;
 
     switch (config.direction) {
       case ParticleDirection.topToBottom:
         x = particle.initialX * size.width;
         // Particles continuously fall from top to bottom
-        y = -100 + (adjustedProgress * (size.height + 200));
+        y =  (adjustedProgress * (size.height ));
         // Add natural horizontal drift
         x += 30 * sin(adjustedProgress * 2 * pi + particle.animationOffset);
         break;
@@ -134,6 +134,8 @@ class ParticlePainter extends CustomPainter {
 
     return Offset(x, y);
   }
+
+
 
   /// Calculates the current opacity of a particle.
   double _calculateOpacity(ParticleData particle, double timeProgress) {

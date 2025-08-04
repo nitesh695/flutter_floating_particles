@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_floating_particles/src/models/particle_covrage.dart';
 import 'particle_config.dart';
 
 /// Represents the properties of an individual particle.
@@ -19,6 +20,9 @@ class ParticleData {
   /// Movement speed multiplier for this particle
   final double velocity;
 
+  /// Screen Covered with particles
+  final double screenOccupancy;
+
   /// Rotation speed in radians per animation cycle
   final double rotationSpeed;
 
@@ -36,6 +40,7 @@ class ParticleData {
     required this.initialY,
     required this.size,
     required this.velocity,
+    required this.screenOccupancy,
     required this.rotationSpeed,
     required this.animationOffset,
     required this.color,
@@ -55,11 +60,27 @@ class ParticleData {
       size: config.minSize +
           random.nextDouble() * (config.maxSize - config.minSize),
       velocity: 0.5 + random.nextDouble() * 0.5,
+      screenOccupancy: _screenOccupancyGenerator(config.particleCoverage),
       rotationSpeed: (random.nextDouble() - 0.5) * 4,
       animationOffset: random.nextDouble() * 2 * pi,
       color: _generateParticleColor(config, random),
       imagePath: config.imagePath,
     );
+  }
+
+  static double _screenOccupancyGenerator(ParticleCoverage data){
+    switch (data) {
+      case ParticleCoverage.quarter:
+        return 0.25;
+      case ParticleCoverage.semiHalf:
+        return 0.35;
+      case ParticleCoverage.half:
+        return 0.5;
+      case ParticleCoverage.semiFull:
+        return 0.75;
+      case ParticleCoverage.full:
+        return 1.0;
+    }
   }
 
   /// Generates a color for the particle based on the configuration.

@@ -34,6 +34,7 @@ class _ParticleDemoState extends State<ParticleDemo> {
     EffectOption('Snow', ParticleConfig(
       particleType: ParticleType.circle,
       direction: ParticleDirection.topToBottom,
+      particleCoverage: ParticleCoverage.half,
       particleCount: 70,
       minSize: 2.0,
       maxSize: 8.0,
@@ -48,11 +49,12 @@ class _ParticleDemoState extends State<ParticleDemo> {
     EffectOption('Rain', ParticleConfig(
       particleType: ParticleType.circle,
       direction: ParticleDirection.topToBottom,
-      particleCount: 150,
+      particleCoverage: ParticleCoverage.quarter,
+      particleCount: 100,
       minSize: 1.0,
       maxSize: 3.0,
       particleColor: Color(0xFF4A90E2),
-      velocityMultiplier: 1.0,
+      velocityMultiplier: 0.8,
       animationDuration: Duration(seconds: 10),
       minOpacity: 0.4,
       maxOpacity: 0.8,
@@ -62,6 +64,7 @@ class _ParticleDemoState extends State<ParticleDemo> {
     EffectOption('Fire Ashes', ParticleConfig(
       particleType: ParticleType.circle,
       direction: ParticleDirection.topToBottom, // Changed to falling
+      particleCoverage: ParticleCoverage.semiFull,
       particleCount: 60,
       minSize: 1.0,
       maxSize: 4.0,
@@ -76,6 +79,7 @@ class _ParticleDemoState extends State<ParticleDemo> {
     EffectOption('Bubbles', ParticleConfig(
       particleType: ParticleType.circle,
       direction: ParticleDirection.topToBottom, // Changed to falling
+      particleCoverage: ParticleCoverage.semiHalf,
       particleCount: 40,
       minSize: 4.0,
       maxSize: 20.0,

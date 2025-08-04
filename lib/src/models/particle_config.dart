@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_floating_particles/src/models/particle_covrage.dart';
 import '../../flutter_floating_particles.dart';
-import 'particle_type.dart';
 
 /// Configuration class that defines how particle effects should behave and appear.
 ///
@@ -12,6 +12,8 @@ class ParticleConfig {
 
   /// Direction of particle movement
   final ParticleDirection direction;
+
+  final ParticleCoverage particleCoverage;
 
   /// Total number of particles to animate
   final int particleCount;
@@ -70,6 +72,7 @@ class ParticleConfig {
   const ParticleConfig({
     this.particleType = ParticleType.circle,
     this.direction = ParticleDirection.topToBottom,
+    this.particleCoverage = ParticleCoverage.full,
     this.particleCount = 50,
     this.minSize = 2.0,
     this.maxSize = 6.0,
@@ -112,6 +115,7 @@ class ParticleConfig {
   static const ParticleConfig fireAshes = ParticleConfig(
     particleType: ParticleType.circle,
     direction: ParticleDirection.bottomToTop,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 30,
     minSize: 1.0,
     maxSize: 4.0,
@@ -133,6 +137,7 @@ class ParticleConfig {
   static const ParticleConfig fallingLeaves = ParticleConfig(
     particleType: ParticleType.star,
     direction: ParticleDirection.topToBottom,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 20,
     minSize: 8.0,
     maxSize: 15.0,
@@ -153,6 +158,7 @@ class ParticleConfig {
   static const ParticleConfig bubbles = ParticleConfig(
     particleType: ParticleType.circle,
     direction: ParticleDirection.bottomToTop,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 25,
     minSize: 4.0,
     maxSize: 20.0,
@@ -171,6 +177,7 @@ class ParticleConfig {
   static const ParticleConfig stars = ParticleConfig(
     particleType: ParticleType.star,
     direction: ParticleDirection.topToBottom,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 40,
     minSize: 3.0,
     maxSize: 10.0,
@@ -192,6 +199,7 @@ class ParticleConfig {
   static const ParticleConfig hearts = ParticleConfig(
     particleType: ParticleType.heart,
     direction: ParticleDirection.bottomToTop,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 15,
     minSize: 6.0,
     maxSize: 16.0,
@@ -212,6 +220,7 @@ class ParticleConfig {
   static const ParticleConfig rain = ParticleConfig(
     particleType: ParticleType.square, // Thin rectangles for rain
     direction: ParticleDirection.topToBottom,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 150,
     minSize: 1.0,
     maxSize: 3.0,
@@ -228,6 +237,7 @@ class ParticleConfig {
   static const ParticleConfig confetti = ParticleConfig(
     particleType: ParticleType.square,
     direction: ParticleDirection.topToBottom,
+    particleCoverage: ParticleCoverage.full,
     particleCount: 80,
     minSize: 4.0,
     maxSize: 8.0,
@@ -252,6 +262,7 @@ class ParticleConfig {
           other is ParticleConfig &&
               runtimeType == other.runtimeType &&
               particleType == other.particleType &&
+              particleCoverage == other.particleCoverage &&
               direction == other.direction &&
               particleCount == other.particleCount &&
               minSize == other.minSize &&
@@ -276,6 +287,7 @@ class ParticleConfig {
     particleType,
     direction,
     particleCount,
+    particleCoverage,
     minSize,
     maxSize,
     animationDuration,
