@@ -1,9 +1,9 @@
 name: flutter_floating_particles
 description: A highly customizable, performant Flutter package for dynamic animated particle effects. Add stars, snowflakes, dots, or custom shapes as interactive backgrounds and overlays.
 version: 1.0.0
-homepage: https://github.com/yourusername/flutter_floating_particles
-repository: https://github.com/yourusername/flutter_floating_particles
-issue_tracker: https://github.com/yourusername/flutter_floating_particles/issues
+homepage: https://github.com/nitesh695/flutter_floating_particles
+repository: https://github.com/nitesh695/flutter_floating_particles
+issue_tracker: https://github.com/nitesh695/flutter_floating_particles/issues
 
 environment:
   sdk: ^3.8.1
@@ -22,11 +22,3 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-topics:
-  - animation
-  - particles
-  - effects
-  - ui
-  - background
-  - interactive
-  - customizable
