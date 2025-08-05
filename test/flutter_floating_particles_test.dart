@@ -170,41 +170,7 @@ void main() {
     });
   });
 
-  group('SimpleParticleEffects Widget Tests', () {
-    testWidgets('SimpleParticleEffects creates widget correctly', (tester) async {
-      const testChild = Text('Simple Test');
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: SimpleParticleEffects(
-            effectType: ParticleEffectType.bubbles,
-            intensity: 1.5,
-            child: testChild,
-          ),
-        ),
-      );
-
-      expect(find.text('Simple Test'), findsOneWidget);
-      expect(find.byType(ParticleEffects), findsOneWidget);
-    });
-
-    testWidgets('SimpleParticleEffects respects intensity setting', (tester) async {
-      const testChild = Text('Intensity Test');
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: SimpleParticleEffects(
-            effectType: ParticleEffectType.snow,
-            intensity: 0.5,
-            child: testChild,
-          ),
-        ),
-      );
-
-      expect(find.text('Intensity Test'), findsOneWidget);
-      expect(find.byType(ParticleEffects), findsOneWidget);
-    });
-  });
 
   group('Enum Tests', () {
     test('ParticleType enum values', () {

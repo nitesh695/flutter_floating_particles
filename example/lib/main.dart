@@ -77,11 +77,12 @@ class _ParticleDemoState extends State<ParticleDemo> {
       maxOpacity: 1.0,
     )),
     EffectOption('Bubbles', ParticleConfig(
-      particleType: ParticleType.circle,
+      particleType: ParticleType.image,
       direction: ParticleDirection.topToBottom, // Changed to falling
       particleCoverage: ParticleCoverage.semiHalf,
       particleCount: 40,
       minSize: 4.0,
+
       maxSize: 20.0,
       particleColor: Colors.black,
       minOpacity: 0.2,
@@ -168,7 +169,35 @@ class _ParticleDemoState extends State<ParticleDemo> {
       minOpacity: 0.7,
       maxOpacity: 1.0,
     )),
+    EffectOption('Flutter Image', ParticleConfig(
+      particleType: ParticleType.image,
+      direction: ParticleDirection.topToBottom, // Already falling
+      particleCount: 30,
+      imagePath: "assets/icon_flutter.png",
+      minSize: 8.0,
+      maxSize: 20.0,
+      enableRotation: true,
+      enableSizeVariation:false,
+      velocityMultiplier: 0.6,
+      animationDuration: Duration(seconds: 20),
+      minOpacity: 0.7,
+      maxOpacity: 1.0,
+    )),
+    EffectOption('Custom Widget', ParticleConfig(
+      particleType: ParticleType.custom,
+      direction: ParticleDirection.topToBottom, // Already falling
+      particleCount: 30,
+      customParticle: Text("Flutter"),
+      minSize: 8.0,
+      maxSize: 150.0,
+      enableRotation: true,
+      velocityMultiplier: 0.6,
+      animationDuration: Duration(seconds: 20),
+      minOpacity: 0.7,
+      maxOpacity: 1.0,
+    )),
   ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -289,41 +318,6 @@ class _ParticleDemoState extends State<ParticleDemo> {
                         ),
                       );
                     },
-                  ),
-                ),
-
-                // Info section
-                Container(
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'About Particle Effects',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'All particles fall from top to bottom with unique speeds and effects',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ],

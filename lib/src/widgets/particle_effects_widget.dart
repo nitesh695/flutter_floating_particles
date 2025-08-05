@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/particle_config.dart';
-import '../models/particle_data.dart';
-import '../painters/particle_painter.dart';
+import '../../flutter_floating_particles.dart';
 
 /// The main widget that wraps any child widget with particle effects.
 ///
@@ -31,16 +29,49 @@ class ParticleEffects extends StatefulWidget {
   /// Callback triggered when animation completes a cycle (optional)
   final VoidCallback? onAnimationComplete;
 
+  /// Widget to show while images are loading (only for image particles)
+  final Widget? loadingWidget;
+
   const ParticleEffects({
     Key? key,
     required this.child,
     this.config = const ParticleConfig(),
     this.isEnabled = true,
     this.onAnimationComplete,
+    this.loadingWidget,
   }) : super(key: key);
 
   @override
   State<ParticleEffects> createState() => _ParticleEffectsState();
+
+  /// Preloads particle images to ensure smooth animation
+  /// Call this method early in your app to preload images
+  static Future<void> preloadImages(List<String> imagePaths) async {
+    final futures = imagePaths.map((path) => ParticlePainter.preloadImage(path));
+    await Future.wait(futures);
+  }
+
+  /// Preloads a single particle image
+  static Future<void> preloadImage(String imagePath) async {
+    await ParticlePainter.preloadImage(imagePath);
+  }
+
+  /// Preloads custom widgets for particle effects
+  /// Call this method early in your app to preload custom widgets
+  static Future<void> preloadCustomWidgets(List<Widget> widgets, double size) async {
+    final futures = widgets.map((widget) => ParticlePainter.preloadCustomWidget(widget, size));
+    await Future.wait(futures);
+  }
+
+  /// Preloads a single custom widget
+  static Future<void> preloadCustomWidget(Widget widget, double size) async {
+    await ParticlePainter.preloadCustomWidget(widget, size);
+  }
+
+  /// Clears all cached particle images to free memory
+  static void clearImageCache() {
+    ParticlePainter.clearImageCache();
+  }
 }
 
 class _ParticleEffectsState extends State<ParticleEffects>
@@ -49,6 +80,7 @@ class _ParticleEffectsState extends State<ParticleEffects>
   late Animation<double> _animation;
   List<ParticleData> _particles = [];
   bool _isInitialized = false;
+  bool _isImageLoading = false;
   late DateTime _startTime;
 
   @override
@@ -56,8 +88,57 @@ class _ParticleEffectsState extends State<ParticleEffects>
     super.initState();
     _startTime = DateTime.now();
     _setupAnimation();
+    _initializeParticles();
+  }
+
+  /// Initialize particles with image/widget preloading if needed
+  void _initializeParticles() async {
+    bool needsLoading = false;
+
+    // Check if we need to preload an image
+    if (widget.config.particleType == ParticleType.image &&
+        widget.config.imagePath != null) {
+      needsLoading = true;
+    }
+
+    // Check if we need to preload a custom widget
+    if (widget.config.particleType == ParticleType.custom &&
+        widget.config.customParticle != null) {
+      needsLoading = true;
+    }
+
+    if (needsLoading) {
+      setState(() {
+        _isImageLoading = true;
+      });
+
+      try {
+        if (widget.config.particleType == ParticleType.image &&
+            widget.config.imagePath != null) {
+          await ParticlePainter.preloadImage(widget.config.imagePath!);
+        }
+
+        if (widget.config.particleType == ParticleType.custom &&
+            widget.config.customParticle != null) {
+          // Preload widget with average particle size
+          final avgSize = (widget.config.minSize + widget.config.maxSize) / 2;
+          await ParticlePainter.preloadCustomWidget(widget.config.customParticle!, avgSize);
+        }
+      } catch (e) {
+        debugPrint('Error preloading particle resources: $e');
+      }
+
+      if (mounted) {
+        setState(() {
+          _isImageLoading = false;
+        });
+      }
+    }
+
     _generateParticles();
-    _isInitialized = true;
+    setState(() {
+      _isInitialized = true;
+    });
   }
 
   /// Sets up the animation controller and animation curve.
@@ -91,9 +172,29 @@ class _ParticleEffectsState extends State<ParticleEffects>
   void didUpdateWidget(ParticleEffects oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    // Handle image/widget path changes
+    bool needsImageReload = false;
+    bool needsWidgetReload = false;
+
+    if (oldWidget.config.particleType != widget.config.particleType ||
+        oldWidget.config.imagePath != widget.config.imagePath) {
+      needsImageReload = widget.config.particleType == ParticleType.image &&
+          widget.config.imagePath != null;
+    }
+
+    if (oldWidget.config.particleType != widget.config.particleType ||
+        oldWidget.config.customParticle != widget.config.customParticle) {
+      needsWidgetReload = widget.config.particleType == ParticleType.custom &&
+          widget.config.customParticle != null;
+    }
+
     // Regenerate particles if configuration changed
     if (oldWidget.config != widget.config) {
-      _generateParticles();
+      if (needsImageReload || needsWidgetReload) {
+        _initializeParticles(); // This will handle image/widget loading
+      } else {
+        _generateParticles();
+      }
 
       // Update animation duration if it changed
       if (oldWidget.config.animationDuration != widget.config.animationDuration) {
@@ -124,8 +225,26 @@ class _ParticleEffectsState extends State<ParticleEffects>
         // Child widget (the content being wrapped)
         widget.child,
 
+        // Show loading indicator if images/widgets are loading
+        if (_isImageLoading)
+          Positioned.fill(
+            child: widget.loadingWidget ??
+                Container(
+                  color: Colors.transparent,
+                  child: const Center(
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                      ),
+                    ),
+                  ),
+                ),
+          ),
+
         // Particle overlay
-        if (widget.isEnabled && _isInitialized)
+        if (widget.isEnabled && _isInitialized && !_isImageLoading)
           Positioned.fill(
             child: IgnorePointer(
               child: AnimatedBuilder(
@@ -146,103 +265,6 @@ class _ParticleEffectsState extends State<ParticleEffects>
             ),
           ),
       ],
-    );
-  }
-}
-
-/// A simplified version of ParticleEffects for basic use cases.
-///
-/// This widget provides common presets and simplified configuration
-/// for users who want quick particle effects without detailed customization.
-class SimpleParticleEffects extends StatelessWidget {
-  /// The child widget to wrap with particle effects
-  final Widget child;
-
-  /// Predefined effect type
-  final ParticleEffectType effectType;
-
-  /// Intensity of the effect (0.1 to 2.0, where 1.0 is normal)
-  final double intensity;
-
-  /// Whether the effect is enabled
-  final bool isEnabled;
-
-  const SimpleParticleEffects({
-    Key? key,
-    required this.child,
-    this.effectType = ParticleEffectType.snow,
-    this.intensity = 1.0,
-    this.isEnabled = true,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final config = _getConfigForType(effectType, intensity);
-
-    return ParticleEffects(
-      config: config,
-      isEnabled: isEnabled,
-      child: child,
-    );
-  }
-
-  /// Returns the appropriate configuration for the given effect type.
-  ParticleConfig _getConfigForType(ParticleEffectType type, double intensity) {
-    ParticleConfig baseConfig;
-
-    switch (type) {
-      case ParticleEffectType.snow:
-        baseConfig = ParticleConfig.snow;
-        break;
-      case ParticleEffectType.rain:
-        baseConfig = ParticleConfig.rain;
-        break;
-      case ParticleEffectType.fireAshes:
-        baseConfig = ParticleConfig.fireAshes;
-        break;
-      case ParticleEffectType.bubbles:
-        baseConfig = ParticleConfig.bubbles;
-        break;
-      case ParticleEffectType.stars:
-        baseConfig = ParticleConfig.stars;
-        break;
-      case ParticleEffectType.hearts:
-        baseConfig = ParticleConfig.hearts;
-        break;
-      case ParticleEffectType.confetti:
-        baseConfig = ParticleConfig.confetti;
-        break;
-      case ParticleEffectType.fallingLeaves:
-        baseConfig = ParticleConfig.fallingLeaves;
-        break;
-    }
-
-    // Apply intensity scaling
-    return ParticleConfig(
-      particleType: baseConfig.particleType,
-      direction: baseConfig.direction,
-      particleCount: (baseConfig.particleCount * intensity).round().clamp(1, 500),
-      minSize: baseConfig.minSize * intensity.clamp(0.5, 2.0),
-      maxSize: baseConfig.maxSize * intensity.clamp(0.5, 2.0),
-      animationDuration: Duration(
-        milliseconds: (baseConfig.animationDuration.inMilliseconds / intensity)
-            .round()
-            .clamp(2000, 60000),
-      ),
-      particleColor: baseConfig.particleColor,
-      imagePath: baseConfig.imagePath,
-      customParticle: baseConfig.customParticle,
-      minOpacity: baseConfig.minOpacity,
-      maxOpacity: baseConfig.maxOpacity,
-      enableGlow: baseConfig.enableGlow,
-      glowRadius: baseConfig.glowRadius * intensity.clamp(0.5, 2.0),
-      enableRotation: baseConfig.enableRotation,
-      velocityMultiplier: baseConfig.velocityMultiplier * intensity.clamp(0.5, 3.0),
-      enableSizeVariation: baseConfig.enableSizeVariation,
-      enableOpacityAnimation: baseConfig.enableOpacityAnimation,
-      gradientColors: baseConfig.gradientColors,
-      enableBlur: baseConfig.enableBlur,
-      blurSigma: baseConfig.blurSigma,
     );
   }
 }
