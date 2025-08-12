@@ -1,6 +1,6 @@
 # 🌟 Flutter Floating Particles
 
-[![pub package](https://img.shields.io/pub/v/flutter_floating_particles.svg)](https://pub.dev/packages/flutter_floating_particles) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub stars](https://img.shields.io/github/stars/your-username/flutter_floating_particles?style=social)](https://github.com/your-username/flutter_floating_particles)
+[![pub package](https://img.shields.io/pub/v/flutter_floating_particles.svg)](https://pub.dev/packages/flutter_floating_particles) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![GitHub stars](https://img.shields.io/github/stars/nitesh695/flutter_floating_particles?style=social)](https://github.com/nitesh695/flutter_floating_particles)
 
 A beautiful and customizable particle effects package for Flutter! Create stunning visual effects like snow, rain, confetti, bubbles, and more with smooth animations and extensive customization options.
 
@@ -180,5 +180,5 @@ This package is licensed under the **MIT License**.
 
 ## 🙏 Support
 
-If you like this package, ⭐ **Star it on [GitHub](https://github.com/your-username/flutter_floating_particles)**!  
-For issues or feature requests, open an issue on [GitHub](https://github.com/your-username/flutter_floating_particles/issues).
+If you like this package, ⭐ **Star it on [GitHub](https://github.com/nitesh695/flutter_floating_particles)**!  
+For issues or feature requests, open an issue on [GitHub](https://github.com/nitesh695/flutter_floating_particles/issues).
