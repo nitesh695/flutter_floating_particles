@@ -17,7 +17,7 @@ A beautiful and customizable particle effects package for Flutter! Create stunni
 ## 📸 Preview
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/nitesh695/spinning_wheel/main/example/example/assets/demo.gif" alt="Particle Effects Demo" style="width: 100%; max-width: 500px;">
+  <img src="https://raw.githubusercontent.com/nitesh695/flutter_floating_particles/main/example/assets/demo.gif" alt="Particle Effects Demo" style="width: 100%; max-width: 500px;">
 </div>
 
 ## 📦 Installation
